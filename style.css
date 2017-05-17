@@ -1,0 +1,19 @@
+.email::before {
+  content: "* ";
+  color: green;
+}
+.traditional .email.active::before {
+  color: red;
+}
+.option2 input:focus + .email::before {
+  color: red;
+}
+.option2 .parent-wrapper {
+  display: flex;
+}
+.option2 .parent-wrapper .email {
+  order: -1;
+}
+.option3 .email:focus-within::before {
+  color: red;
+}

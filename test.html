@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>Запутанная история инпута, фокуса, родителя и псевдоэлемента</h1>
+        <p>В одном из телеграмм-чатов по фронтенду сегодня возник вопрос по верстке форм:</p>
+        <img src="question.png" alt="Question screenshot">
+        <p>У меня для таких случаев есть только один вариант решения, но ребята в чате дали еще несколько онтересных идей, которые мне захотелось попробовать.</p>
+        <hr>
+        <h2>Работающее решение</h2>
+        <div class="traditional">
+          <h3>Js(jquery)+css</h3>
+          <p>Традиционный способ. Логика такая: в css прописываем родителю стили для двух состояний - обычного и активного. В js добавляем родителю класс в зависимости от фокуса на инпуте</p>
+          <b>Демо:</b>
+          <div class="email">
+            <input type="text">
+          </div>
+          <script>
+            var element = $('.traditional .email input');
+            var parent = $(element).parent();
+            element.focus(function(){
+              parent.addClass('active');
+            }).blur(function(){
+              parent.removeClass('active');
+            })
+          </script>
+          <a href="https://jsfiddle.net/bzkkdd4r/">Посмотреть фиддл</a>
+          <p>Полностью удовлетворяет условию задачи, при необходимомти можно переписать на чистый js</p>
+        </div>
+        <hr>
+        <h2>Эксперименты</h2>
+        <div class="option1">
+          <h3>#1: Vanilla Js</h3>
+          <p>Пытаемся вытащить псевдоэлемент через js, используя querySelector. Технически, псебдоэлементы не являются элементами DOM, поэтому ни достать их, ни изменить мне казалось невозможным. Однако, у объекта window есть метод getComputedStyle, который возвращает элемент со всеми стилями уже после того, как браузер отрисовал страницу (и в ней появились наши псевдоэлементы). Однако, это значит, что повлиять на него уже нельзя, так как теперь он нам доступен только для чтения</p>
+          <div class="email">
+            <input type="text">
+          </div>
+          <p>Загляните в консоль, чтобы увидеть псевдоэлемент и его свойства</p>
+          <a href="https://jsfiddle.net/ec7k93hv/">Посмотреть фиддл</a>   
+          <script>
+            var pseudoElement = window.getComputedStyle(document.querySelector('.email'), ':before');
+            console.log("Псевдоэлемент");
+            console.log(pseudoElement);
+          </script>
+        </div>
+        <div class="option2">
+          <h3>#2: Чистый css</h3>
+          <p>Логика такова: отловить фокус на поле ввода и в этот момент изменить рядом стоящий элемент.</p>
+          <p> Для использования такого подхода нужно изменить разметку, и поставить див c псевдоэлементом в разметке после инпута. Поменять их местами визуально можно с помошью свойств position или flexfox, и тогда нужно добавить еще один оберточный элемент</p>
+          <div class="parent-wrapper">
+            <input type="text">
+            <div class="email"></div>
+          </div>
+          <a href="https://jsfiddle.net/ao72v2ew/">Посмотреть фиддл</a>
+        </div>
+
+        <div class="option3">
+          <h3>#3: Экспериментальный css</h3>
+          <p>Пробуем псевдокласс :focus-within, который присваивается элементу, если он сам, или любой из его потомков получает состояние :focus</p>
+          <p>Свойство экспериментальное, поэтому работает только в 9% браузеров</p>
+          <a href="http://caniuse.com/#search=%3Afocus-within">CaniUse :focus-within</a>
+          <div class="email">
+            <input type="text">
+          </div>
+          <a href="https://jsfiddle.net/3sar0z13/">Посмотреть фиддл</a>
+        </div>
+        <hr>
+        <a href="https://github.com/tsvetkovamaria/explore-focus">Посмотреть все в репозитории</a>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
